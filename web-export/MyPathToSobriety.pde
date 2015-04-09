@@ -14,6 +14,9 @@ PFont tinyFont;
 String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 color dailyColor = color(255, 150, 50);
 color weeklyColor = color(255, 150, 50, 50);
+color wineColor = color(170,40,60);
+color beerColor = color(255,170,50);
+color shotColor = color(70, 170, 220);
 
 void setup(){
   size(1600,750);
@@ -97,10 +100,29 @@ void draw(){
     }
     
     // draw daily totals
-    fill(dailyColor);
-    float barHeight = ySpacing * de.dailyTotal/5;
-    rect(0, 0-barHeight, xSpacing-1, barHeight);
+    //fill(dailyColor);
+    //float barHeight = ySpacing * de.dailyTotal/5;
+    //rect(0, 0-barHeight, xSpacing-1, barHeight);
     //text(de.dailyTotal, 0, 0-barHeight);
+    
+    float wineHeight = 0;
+    float beerHeight = 0;
+    float shotHeight = 0;
+    if(de.wine != null){
+      wineHeight = int(ySpacing * de.wine/5);
+    }
+    if(de.beer != null){
+      beerHeight = int(ySpacing * de.beer/5);
+    }
+    if(de.shots != null){
+      shotHeight = int(ySpacing * de.shots/5);
+    }
+    fill(wineColor);
+    rect(0, 0-wineHeight, xSpacing-1, wineHeight);
+    fill(beerColor);
+    rect(0, 0-wineHeight-beerHeight, xSpacing-1, beerHeight);
+    fill(shotColor);
+    rect(0, 0-wineHeight-beerHeight-shotHeight, xSpacing-1, shotHeight);
     
     xpos += xSpacing;
     popMatrix();
@@ -112,15 +134,21 @@ void draw(){
   translate(width-margin-(ySpacing*2), margin);
   stroke(220);
   fill(255);
-  rect(0, 0, ySpacing*2, 50);
+  rect(0, 0, ySpacing*2, ySpacing);
   noStroke();
-  fill(dailyColor);
-  rect(10, 10, xSpacing, xSpacing);
   fill(weeklyColor);
+  rect(10, 10, xSpacing, xSpacing);
+  fill(wineColor);
   rect(10, 30, xSpacing, xSpacing);
+  fill(beerColor);
+  rect(10, 50, xSpacing, xSpacing);
+  fill(shotColor);
+  rect(10, 70, xSpacing, xSpacing);
   fill(0);
-  text("Number of Drinks Per Day", 20 + xSpacing, 19);
-  text("Running Weekly Average", 20 + xSpacing, 39);
+  text("Running Weekly Average", 20 + xSpacing, 19);
+  text("Wines per Day", 20 + xSpacing, 39);
+  text("Beers per Day", 20 + xSpacing, 59);
+  text("Shots per Day", 20 + xSpacing, 79);
   popMatrix();
   
   
@@ -150,6 +178,7 @@ class DrinkEntry{
     oneWeek = float(d[6]);
     twoWeeks = float(d[7]);
     threeWeeks = float(d[8]);
+    println(dateString +" "+ wine +" "+ beer +" "+ shots);
   }
 }
 

@@ -23,5 +23,6 @@ class DrinkEntry{
     oneWeek = float(d[6]);
     twoWeeks = float(d[7]);
     threeWeeks = float(d[8]);
+    println(dateString +" "+ wine +" "+ beer +" "+ shots);
   }
 }
