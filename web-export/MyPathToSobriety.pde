@@ -1,3 +1,8 @@
+/* @pjs
+crisp=true;
+font=04B_03__.TTF,LondonMM.ttf,LondonTwo.ttf
+*/
+
 /**
 MyPathToSobriety.pde by Aaron Siegel (datadreamer.com) (4/9/2015)<br/>
 Based on the /r/dataisbeautiful post My Path to Sobriety by /u/ERAU<br/>
@@ -34,8 +39,9 @@ void setup(){
   xSpacing = (width - (margin * 2)) / drinkEntries.size();
   ySpacing = ((height - (margin * 2)) - 30) / 7;
   println(PFont.list());
-  tinyFont = createFont("Arial", 8);
-  labelFont = createFont("Arial", 12);
+  tinyFont = createFont("04B_03__.TTF", 8);
+  labelFont = createFont("LondonMM.ttf", 14);
+  numberFont = createFont("LondonTwo.ttf", 14);
 }
 
 void draw(){
@@ -132,11 +138,14 @@ void draw(){
   // highlight entry with mouse
   stroke(lineColor);
   line(mouseX, margin, mouseX, height-50);
-  int index = int((mouseX-margin) / float(width-(margin*2)) * drinkEntries.size());
+  float indexFloat = (mouseX-margin) / float(width-(margin*2)) * drinkEntries.size();
+  int index = int(indexFloat);
   if(index >= 0 && index < drinkEntries.size()){
     // draw details
     DrinkEntry de = drinkEntries.get(index);
-    //float lineHeight = (height-50) - ySpacing * de.weeklyTotal/5;
+    float lineHeight = (height-50) - ySpacing * de.weeklyTotal/5;
+    fill(0);
+    ellipse(mouseX, lineHeight, 5, 5);
     //line(mouseX, lineHeight, mouseX, height-50);
     stroke(lineColor);
     fill(255);
@@ -152,10 +161,11 @@ void draw(){
     text("Wine: "+ de.wine, 10, 40);
     text("Beer: "+ de.beer, 10, 60);
     text("Shots: "+ de.shots, 10, 80);
-    text("Weekly Average:", ySpacing-10, 20);
-    textFont(labelFont, 32);
     textAlign(CENTER);
-    text(de.weeklyTotal, ySpacing + 35, 60);
+    text("Weekly\nAverage:", ySpacing + 35, 20);
+    textFont(numberFont, 32);
+    println(str(de.weeklyTotal).length());
+    text(de.weeklyTotal, ySpacing + 35, 80);
     textAlign(LEFT);
     popMatrix();
   }
@@ -196,7 +206,7 @@ class DrinkEntry{
     String[] d = data.split(",");
     date = new Date(d[0]);
     String[] ds = date.toString().split(" ");
-    dateString = ds[1] + " "+ ds[2];
+    dateString = monthNames[date.getMonth()] + " "+ ds[2];
     if(ds[0].equals("Sat") || ds[0].equals("Sun")){
       weekend = true;
     }

@@ -10,7 +10,7 @@ class DrinkEntry{
     String[] d = data.split(",");
     date = new Date(d[0]);
     String[] ds = date.toString().split(" ");
-    dateString = ds[1] + " "+ ds[2];
+    dateString = monthNames[date.getMonth()] + " "+ ds[2];
     if(ds[0].equals("Sat") || ds[0].equals("Sun")){
       weekend = true;
     }
