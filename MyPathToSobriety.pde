@@ -38,7 +38,6 @@ void setup(){
   }
   xSpacing = (width - (margin * 2)) / drinkEntries.size();
   ySpacing = ((height - (margin * 2)) - 30) / 7;
-  println(PFont.list());
   tinyFont = createFont("04B_03__.TTF", 8);
   labelFont = createFont("LondonMM.ttf", 14);
   numberFont = createFont("LondonTwo.ttf", 14);
@@ -65,6 +64,10 @@ void draw(){
     ypos -= ySpacing;
   }
   popMatrix();
+  
+  // line for cursor interaction
+  stroke(lineColor);
+  line(mouseX, margin, mouseX, height-50);
   
   // connect callibrated weekly total
   float xpos = 0;
@@ -136,14 +139,19 @@ void draw(){
   }
   
   // highlight entry with mouse
-  stroke(lineColor);
-  line(mouseX, margin, mouseX, height-50);
   float indexFloat = (mouseX-margin) / float(width-(margin*2)) * drinkEntries.size();
   int index = int(indexFloat);
   if(index >= 0 && index < drinkEntries.size()){
-    // draw details
     DrinkEntry de = drinkEntries.get(index);
     float lineHeight = (height-50) - ySpacing * de.weeklyTotal/5;
+    // draw line around bar
+    if(de.dailyTotal > 0){
+      stroke(255);
+      noFill();
+      float barHeight = ySpacing * de.dailyTotal/5;
+      rect(margin + (index * xSpacing) - 1, (height-50)-barHeight-1, xSpacing, barHeight+1);
+    }
+    // draw details
     fill(0);
     ellipse(mouseX, lineHeight, 5, 5);
     //line(mouseX, lineHeight, mouseX, height-50);
@@ -164,7 +172,6 @@ void draw(){
     textAlign(CENTER);
     text("Weekly\nAverage:", ySpacing + 35, 20);
     textFont(numberFont, 32);
-    println(str(de.weeklyTotal).length());
     text(de.weeklyTotal, ySpacing + 35, 80);
     textAlign(LEFT);
     popMatrix();
