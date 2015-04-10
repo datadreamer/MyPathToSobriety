@@ -3,7 +3,7 @@ MyPathToSobriety.pde by Aaron Siegel (datadreamer.com) (4/9/2015)<br/>
 Based on the /r/dataisbeautiful post My Path to Sobriety by /u/ERAU<br/>
 http://www.reddit.com/r/dataisbeautiful/comments/31zv8n/my_path_to_sobriety_oc/<br/>
 <br/>
-Loads in a cleaned up CSV version of OPs excel sheet and creates a minimalist chart.
+Loads in a cleaned up CSV version of OPs excel sheet and creates a minimalist chart. Rollover the chart to get daily details.
 **/
 
 ArrayList<DrinkEntry> drinkEntries = new ArrayList<DrinkEntry>();
@@ -17,6 +17,7 @@ color weeklyColor = color(255, 150, 50, 50);
 color wineColor = color(170,40,60);
 color beerColor = color(255,170,50);
 color shotColor = color(70, 170, 220);
+color lineColor = color(230);
 
 void setup(){
   size(1600,750);
@@ -44,7 +45,7 @@ void draw(){
   // draw measurement lines in background
   pushMatrix();
   translate(0,height-50);
-  stroke(230);
+  stroke(lineColor);
   fill(0);
   float ypos = 0;
   textAlign(RIGHT);
@@ -82,7 +83,7 @@ void draw(){
     translate(margin + xpos, height-50);
     if(de.weekend){
       noStroke();
-      fill(230);
+      fill(lineColor);
       rect(0, 0, xSpacing-1, 20);
     }
     
@@ -128,11 +129,42 @@ void draw(){
     popMatrix();
   }
   
+  // highlight entry with mouse
+  stroke(lineColor);
+  line(mouseX, margin, mouseX, height-50);
+  int index = int((mouseX-margin) / float(width-(margin*2)) * drinkEntries.size());
+  if(index >= 0 && index < drinkEntries.size()){
+    // draw details
+    DrinkEntry de = drinkEntries.get(index);
+    //float lineHeight = (height-50) - ySpacing * de.weeklyTotal/5;
+    //line(mouseX, lineHeight, mouseX, height-50);
+    stroke(lineColor);
+    fill(255);
+    pushMatrix();
+    if(mouseX > width - 200){
+      translate(0 - (ySpacing*2),0);
+    }
+    translate(mouseX, mouseY-ySpacing);
+    rect(0, 0, ySpacing*2, ySpacing);
+    fill(0);
+    textFont(labelFont);
+    text(de.dateString, 10, 20);
+    text("Wine: "+ de.wine, 10, 40);
+    text("Beer: "+ de.beer, 10, 60);
+    text("Shots: "+ de.shots, 10, 80);
+    text("Weekly Average:", ySpacing-10, 20);
+    textFont(labelFont, 32);
+    textAlign(CENTER);
+    text(de.weeklyTotal, ySpacing + 35, 60);
+    textAlign(LEFT);
+    popMatrix();
+  }
+  
   // draw legend in upper right corner
   pushMatrix();
   textFont(labelFont);
   translate(width-margin-(ySpacing*2), margin);
-  stroke(220);
+  stroke(lineColor);
   fill(255);
   rect(0, 0, ySpacing*2, ySpacing);
   noStroke();
@@ -150,6 +182,5 @@ void draw(){
   text("Beers per Day", 20 + xSpacing, 59);
   text("Shots per Day", 20 + xSpacing, 79);
   popMatrix();
-  
-  
+ 
 }
